@@ -1,0 +1,23 @@
+version: "3.9"
+
+volumes:
+  mysql_data:
+  wp_content:
+services:
+  nginx:
+    build: ./nginx
+    volumes:
+      - ./:/var/www/html
+    restart: on-failure
+    depends_on:
+      - wordpress
+    ports:
+      - "2020:80"
+    environment:
+      UPSTREAM_SERVER: wordpress # doesn't work inside nginx config file
+  wordpress:
+    build: .
+    restart: on-failure
+    volumes:
+      - ./:/var/www/html
+      - wp_content:/var/www/html/web/app
